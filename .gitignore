@@ -1,0 +1,56 @@
+# Sensitive / junk
+aasas
+.lesshst
+
+# Server/private files
+.ssh/
+.local/
+draft/
+
+.bash_history
+.bashrc
+.bash_logout
+.profile
+.my.cnf
+.git-credentials
+.gitconfig
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Dependencies
+vendor/
+node_modules/
+
+# Laravel
+storage/logs/*
+storage/*.key
+bootstrap/cache/*.php
+
+public/storage
+public/build
+public/hot
+
+# Logs
+*.log
+php-error.log
+php-fpm.log
+
+# Backups / archives
+*.zip
+*.tar
+*.gz
+*.sql
+
+# Editors
+.idea/
+.vscode/
+.zed/
+*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db

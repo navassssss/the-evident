@@ -1,0 +1,1 @@
+jQuery.fn.currDate = function () { var t = new Date, e = "0" + t.getDate(), n = Months()[t.getMonth()], a = t.getFullYear(), s = e.slice(-2) + '<span class="icon-meta">' + n + "<span> " + a + "</span></span>"; return this.html(s) };
