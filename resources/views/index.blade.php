@@ -78,7 +78,11 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 
     @php
-        $feedData = \Illuminate\Support\Facades\Cache::get('homepage_sections', []);
+        $feedData = \Illuminate\Support\Facades\Cache::get('homepage_sections');
+        if (empty($feedData)) {
+            app(\App\Http\Controllers\HomeController::class)->generateHomeFeed();
+            $feedData = \Illuminate\Support\Facades\Cache::get('homepage_sections', []);
+        }
         $firstSlideId = $feedData['slide'][0] ?? null;
         $firstSlideImage = null;
         
@@ -230,7 +234,11 @@
                     <div class='widget-content'>
                         <div class="posts slide" id="main-slider">
                             @php
-                                $feed = Cache::get('homepage_sections', []);
+                                $feed = \Illuminate\Support\Facades\Cache::get('homepage_sections');
+                                if (empty($feed)) {
+                                    app(\App\Http\Controllers\HomeController::class)->generateHomeFeed();
+                                    $feed = \Illuminate\Support\Facades\Cache::get('homepage_sections', []);
+                                }
                                 $slideIds = $feed['slide'] ?? [];
                                 $slides = \App\Models\Post::with(['author', 'category'])
                                     ->whereIn('id', $slideIds)
