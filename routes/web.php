@@ -11,17 +11,17 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
-Route::get('/create-admin', function () {
-    $user = User::updateOrCreate(
-            ['email' => 'admin@evidentmonthly.in'],
-                    [
-                                'name' => 'Admin',
-                                            'password' => Hash::make('Civil@2025'),
-                                                    ]
-                                                        );
+// Route::get('/create-admin', function () {
+//     $user = User::updateOrCreate(
+//         ['email' => 'admin@evidentmonthly.in'],
+//         [
+//             'name' => 'Admin',
+//             'password' => Hash::make('Civil@2025'),
+//         ]
+//     );
 
-                                                            return "User created/updated: {$user->email} at " . now();
-                                                            });
+//     return "User created/updated: {$user->email} at " . now();
+// });
 Route::get('/inaugurate', function () {
     return view('welcome');
 });
@@ -62,34 +62,34 @@ Route::get('/editions/{edition:slug}', function (Edition $edition) {
     return redirect()->away($edition->url);
 })->name('home.edition');
 
-Route::get('/sitemap', function(){
-Artisan::call('sitemap:generate');
-return("sitemap generated");
+Route::get('/sitemap', function () {
+    Artisan::call('sitemap:generate');
+    return ("sitemap generated");
 });
-Route::get('/checkit', function(){
-// Artisan::call('migrate:rollback');
+Route::get('/checkit', function () {
+    // Artisan::call('migrate:rollback');
 // Artisan::call('vendor:publish --force --tag=livewire:assets');
 // Artisan::call('filament:assets');
 // php artisan config:clear
 // php artisan optimize:clear
 
 
-// Artisan::call('route:cache');
+    // Artisan::call('route:cache');
 // Artisan::call('session:table');
-Artisan::call('optimize:clear');
+    Artisan::call('optimize:clear');
 
-// 
+    // 
 
-$output = Artisan::output(); // Get CLI output as string
+    $output = Artisan::output(); // Get CLI output as string
 
     return nl2br($output);
 });
 
-Route::get('/make-section-resource', function () {
-    Artisan::call('make:filament-resource Section --generate');
+// Route::get('/make-section-resource', function () {
+//     Artisan::call('make:filament-resource Section --generate');
 
-    return nl2br(Artisan::output());
-});
+//     return nl2br(Artisan::output());
+// });
 
 Route::get('/run-setup', function () {
     // Run migrations
@@ -124,8 +124,8 @@ Route::get('/about-us', function () {
         ->orderByDesc('posts_count')
         ->take(3)
         ->get();
-        $sections = Section::with('categories')
-            ->get();
+    $sections = Section::with('categories')
+        ->get();
     return view('about', compact('topCategories', 'sections'));
 })->name('about');
 Route::get('/privacy-policy', function () {
@@ -133,8 +133,8 @@ Route::get('/privacy-policy', function () {
         ->orderByDesc('posts_count')
         ->take(3)
         ->get();
-        $sections = Section::with('categories')
-            ->get();
+    $sections = Section::with('categories')
+        ->get();
     return view('privacy', compact('topCategories', 'sections'));
 })->name('privacy');
 Route::get('/terms-and-conditions', function () {
@@ -142,8 +142,8 @@ Route::get('/terms-and-conditions', function () {
         ->orderByDesc('posts_count')
         ->take(3)
         ->get();
-        $sections = Section::with('categories')
-            ->get();
+    $sections = Section::with('categories')
+        ->get();
     return view('terms', compact('topCategories', 'sections'));
 })->name('terms');
 Route::get('/cookies', function () {
@@ -151,8 +151,8 @@ Route::get('/cookies', function () {
         ->orderByDesc('posts_count')
         ->take(3)
         ->get();
-        $sections = Section::with('categories')
-            ->get();
+    $sections = Section::with('categories')
+        ->get();
     return view('cookie', compact('topCategories', 'sections'));
 })->name('cookie');
 // contact
@@ -161,8 +161,8 @@ Route::get('/contact', function () {
         ->orderByDesc('posts_count')
         ->take(3)
         ->get();
-        $sections = Section::with('categories')
-            ->get();
+    $sections = Section::with('categories')
+        ->get();
     return view('contact', compact('topCategories', 'sections'));
 })->name('contact');
 

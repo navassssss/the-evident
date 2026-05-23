@@ -43,11 +43,11 @@
     <!-- End Google Tag Manager -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1814859848368118"
         crossorigin="anonymous"></script>
-    <link rel="icon" type="image/png" href="<?php echo e(asset('favicon-96x96.png')); ?>" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="<?php echo e(asset('favicon.svg')); ?>" />
-    <link rel="shortcut icon" href="<?php echo e(asset('favicon.ico')); ?>" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo e(asset('apple-touch-icon.png')); ?>" />
-    <link rel="manifest" href="<?php echo e(asset('site.webmanifest')); ?>">
+    <link rel="icon" type="image/png" href="{{ asset('favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}" />
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
 
     <meta name="description"
@@ -55,17 +55,17 @@
     <meta property="og:locale" content="en" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="The Evident – English Monthly Magazine" />
-    <meta property="og:url" content="<?php echo e(url()->current()); ?>" />
+    <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:description"
         content="The Evident – An English monthly magazine exploring faith, theology, philosophy, history, and Muslim culture. Insightful articles from the Department of Civilizational Studies, Darul Hasanath Islamic College." />
     <meta property="og:site_name" content="The Evident – English Monthly Magazine" />
-    <meta property="og:image" content="<?php echo e(asset('logocolor.png')); ?>" />
+    <meta property="og:image" content="{{ asset('logocolor.png') }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="The Evident – English Monthly Magazine" />
     <meta name="twitter:description"
         content="The Evident – An English monthly magazine exploring faith, theology, philosophy, history, and Muslim culture. Insightful articles from the Department of Civilizational Studies, Darul Hasanath Islamic College." />
-    <meta name="twitter:image" content="<?php echo e(asset('logocolor.png')); ?>" />
+    <meta name="twitter:image" content="{{ asset('logocolor.png') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,8 +74,8 @@
 
 
 
-    <link rel="preload" href="<?php echo e(asset('style.css')); ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="stylesheet" href="<?php echo e(asset('style.css')); ?>">
+    <link rel="preload" href="{{ asset('style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
 
     <style>
         .evident-confetti-wrapper {
@@ -134,7 +134,7 @@
         }
     </style>
 </head>
-<?php
+@php
     $schemaData = [
         '@context' => 'https://schema.org',
         '@graph' => [
@@ -187,11 +187,10 @@
             ],
         ],
     ];
-?>
+@endphp
 
 <script type="application/ld+json">
-<?php echo json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
-
+{!! json_encode($schemaData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
 
 <body class='home multiple hasIE hasTE'>
@@ -205,7 +204,7 @@
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div class="evident-confetti-wrapper" id="evidentConfettiContainer"></div>
-    <?php echo $__env->make('partials.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    @include('partials.header')
     <div class='layouts wrapper'>
         <div class='layouts-inner'>
             <div class='layout-1 layout section' id='layout-1' name='Layout 1'>
@@ -268,7 +267,7 @@
                             <div class='widget-content grid-2 gridView'>
                                 <div class='posts'>
 
-                                    <?php
+                                    @php
                                         $feed = Cache::get('homepage_sections', []);
                                         $postIds = $feed['latest_detailed'] ?? [];
                                         $posts = \App\Models\Post::with(['author', 'category'])
@@ -278,61 +277,103 @@
                                                 return array_search($post->id, $postIds);
                                             })
                                             ->values();
-                                    ?>
-                                    <?php $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <article class='post postOuter item-<?php echo e($loop->index); ?>'>
+                                    @endphp
+                                    @foreach ($posts as $post)
+                                        <article class='post postOuter item-{{ $loop->index }}'>
                                             <div class='postImage'>
-                                                <a href="<?php echo e(route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id])); ?>"
-                                                    title="<?php echo e($post->title); ?>">
+                                                <a href="{{ route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id]) }}"
+                                                    title="{{ $post->title }}">
                                                     <span class="hasImage"
-                                                        data-style="<?php echo e(asset(Storage::url($post->thumbnail_url))); ?>"
-                                                        style="background-image: url('<?php echo e(asset(Storage::url($post->thumbnail_url))); ?>');">
+                                                        data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"
+                                                        style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');">
                                                     </span>
                                                 </a>
                                             </div>
                                             <div class='postDetails'>
-                                                <span class='postCat' data-cat="<?php echo e($post->category->term); ?>">
+                                                <span class='postCat' data-cat="{{ $post->category->term }}">
                                                     <a
-                                                        href='<?php echo e(route('category.show', ['category' => $post->category->term])); ?>'><?php echo e($post->category->term); ?></a>
+                                                        href='{{ route('category.show', ['category' => $post->category->term]) }}'>{{ $post->category->term }}</a>
                                                 </span>
                                                 <h3 class='postTitle'>
-                                                    <a href='<?php echo e(route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id])); ?>'
-                                                        rel='bookmark' title="<?php echo e($post->title); ?>">
-                                                        <?php echo e($post->title); ?>
-
+                                                    <a href='{{ route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id]) }}'
+                                                        rel='bookmark' title="{{ $post->title }}">
+                                                        {{ $post->title }}
                                                     </a>
                                                 </h3>
                                                 <p class='postSnippet'>
-                                                    <?php echo e(Str::limit(strip_tags($post->content), 150, '...')); ?>
-
+                                                    {{ Str::limit(strip_tags($post->content), 150, '...') }}
                                                 </p>
                                                 <div class='postMeta'>
                                                     <div class='postAuthorAndTimestamp'>
                                                         <span class='authorImage'>
                                                             <span class='hasImage'
-                                                                data-style='<?php echo e(asset(Storage::url($post->author->image_url))); ?>'
-                                                                style="background-image: url('<?php echo e(asset(Storage::url($post->author->image_url))); ?>');"></span>
+                                                                data-style='{{ asset(Storage::url($post->author->image_url)) }}'
+                                                                style="background-image: url('{{ asset(Storage::url($post->author->image_url)) }}');"></span>
                                                         </span>
                                                         <span class='postAuthorAndDate'>
                                                             <span class='postAuthor'>
-                                                                <?php echo e($post->author->name); ?>
-
+                                                                {{ $post->author->name }}
                                                             </span>
                                                             <span class='postDate'>
                                                                 <time class='published'
-                                                                    datetime="<?php echo e($post->published_at?->toIso8601String() ?? now()->toIso8601String()); ?>"></time>
+                                                                    datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}"></time>
                                                             </span>
                                                         </span>
                                                     </div>
                                                     <span class='postReadMore'><a
-                                                            href='<?php echo e(route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id])); ?>'>Keep
+                                                            href='{{ route('home.show', ['category' => $post->category->scheme, 'post' => $post->slug ?? $post->id]) }}'>Keep
                                                             reading</a></span>
                                                 </div>
                                             </div>
                                         </article>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    @endforeach
 
-                                    
+                                    {{-- <article class='post postOuter item-3'>
+                                                            <div class='postImage'>
+                                                                  <a href='https://atlas-home2.blogspot.com/2022/09/surprising-benefits-of-honeydew-melon.html'
+                                                                        title='Surprising Benefits of Honeydew Melon'>
+                                                                        <span class='hasImage'
+                                                                              data-style='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiz8EwbCrR3aehkzqA9hev0akbKabiIyW7f4WvvUGP2yHZK-olossdzno_y6qKGlgNUs9iYcHIlYyTp8loDiIwnZGpcfSK_MNr59nlAQYWL-U8b7O1Z7S0snQXXWOj2o4xUvuK0wCMwuMUZQmi5PdfifZw_BBz540iybmm9ZUJEY8dFYlP1yMc5Yx6OYw/w72-h72-p-k-no-nu/isaac-n-c-K4FL5rNr9oQ-unsplash.jpg'></span>
+                                                                  </a>
+                                                            </div>
+                                                            <div class='postDetails'>
+                                                                  <span class='postCat' data-cat='Food'>
+                                                                        <a
+                                                                              href='https://atlas-home2.blogspot.com/search/label/Food'>Food</a>
+                                                                  </span>
+                                                                  <h3 class='postTitle'>
+                                                                        <a href='https://atlas-home2.blogspot.com/2022/09/surprising-benefits-of-honeydew-melon.html'
+                                                                              rel='bookmark'
+                                                                              title='Surprising Benefits of Honeydew Melon'>
+                                                                              Surprising Benefits of Honeydew Melon
+                                                                        </a>
+                                                                  </h3>
+                                                                  <p class='postSnippet'>Lorem ipsum , or lipsum as it
+                                                                        is sometimes known, is dummy text used in laying
+                                                                        out print, graphic or web designs. The p&#8230;
+                                                                  </p>
+                                                                  <div class='postMeta'>
+                                                                        <div class='postAuthorAndTimestamp'>
+                                                                              <span class='authorImage'>
+                                                                                    <span class='hasImage'
+                                                                                          data-style='//blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjaCrj4VThWfdehT1HCxWVofWugCV_5w1cu8kxooEVym35XIeduh1ga20FulBW5nvIUzJzLPujBPbiMyjA8XhoyEFDExkfFWYeqLsGWztEUQRetTxnSotb8375fXouDQdU/w72-h72-p-k-no-nu/author-3.png'></span>
+                                                                              </span>
+                                                                              <span class='postAuthorAndDate'>
+                                                                                    <span class='postAuthor'>
+                                                                                          IW studio
+                                                                                    </span>
+                                                                                    <span class='postDate'>
+                                                                                          <time class='published'
+                                                                                                datetime='2022-09-07T02:42:00-07:00'></time>
+                                                                                    </span>
+                                                                              </span>
+                                                                        </div>
+                                                                        <span class='postReadMore'><a
+                                                                                    href='https://atlas-home2.blogspot.com/2022/09/surprising-benefits-of-honeydew-melon.html'>Keep
+                                                                                    reading</a></span>
+                                                                  </div>
+                                                            </div>
+                                                      </article> --}}
                                 </div>
                                 <div class='blogPager' id='blogPager'>
                                     <a class='loadMore'
@@ -392,7 +433,7 @@
                                     <li class='hasIcon facebook'>
                                         <a href='https://www.facebook.com/civilizationhasanath/' target='_blank'>
                                             Civilization Hasanath
-                                            
+                                            {{-- <span class='icon-meta'>200k</span> --}}
                                         </a>
                                     </li>
                                     <li class='hasIcon spotify'>
@@ -400,19 +441,19 @@
                                         <a href='https://open.spotify.com/show/3bVGzJEeanxTRLjFt3J3eQ?si=ce28f3517e5a4598'
                                             target='_blank'>
                                             Civilization Hasanath
-                                            
+                                            {{-- <span class='icon-meta'>50k</span> --}}
                                         </a>
                                     </li>
                                     <li class='hasIcon youtube'>
                                         <a href='https://www.youtube.com/@civilizationhasanath' target='_blank'>
                                             Civilization Hasanath
-                                            
+                                            {{-- <span class='icon-meta'>564</span> --}}
                                         </a>
                                     </li>
                                     <li class='hasIcon instagram'>
                                         <a href='https://www.instagram.com/civilization_hasanath/' target='_blank'>
                                             Dept. of Civilizational Studies
-                                            
+                                            {{-- <span class='icon-meta'>1m</span> --}}
                                         </a>
                                     </li>
                                 </ul>
@@ -446,7 +487,7 @@
             <div class='layout-5 layout no-items section' id='layout-5' name='Layout 5'></div>
         </div>
     </div>
-    <?php echo $__env->make('partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    @include('partials.footer')
     <div class='sticky-bar'>
         <div class='sticky-list section' id='sticky-list' name='Sticky Bar'>
             <div class='widget LinkList' data-type='iconList' data-version='2' id='LinkList6'>
@@ -479,17 +520,17 @@
         }
     </script>
     <!-- Main Script -->
-    <script src="<?php echo e(asset('timeago.js')); ?>"></script>
-    <script src="<?php echo e(asset('locals.js')); ?>"></script>
-    <script src="<?php echo e(asset('sticky.js')); ?>"></script>
-    <script src="<?php echo e(asset('lazyload.js')); ?>"></script>
-    <script src="<?php echo e(asset('submenu.js')); ?>"></script>
-    <script src="<?php echo e(asset('ticker.js')); ?>"></script>
-    <script src="<?php echo e(asset('currdate.js')); ?>"></script>
+    <script src="{{ asset('timeago.js') }}"></script>
+    <script src="{{ asset('locals.js') }}"></script>
+    <script src="{{ asset('sticky.js') }}"></script>
+    <script src="{{ asset('lazyload.js') }}"></script>
+    <script src="{{ asset('submenu.js') }}"></script>
+    <script src="{{ asset('ticker.js') }}"></script>
+    <script src="{{ asset('currdate.js') }}"></script>
 
 
     <script type="text/javascript" src="https://www.blogger.com/static/v1/widgets/2726972568-widgets.js"></script>
-    <script src="<?php echo e(asset('neew.js')); ?>"></script>
+    <script src="{{ asset('neew.js') }}"></script>
 
     <script>
         // document.addEventListener('DOMContentLoaded', function() {
@@ -514,4 +555,3 @@
 </body>
 
 </html>
-<?php /**PATH /var/www/5a5b779e-2ce1-449e-8f4f-cde8aa60fa21/resources/views/index.blade.php ENDPATH**/ ?>

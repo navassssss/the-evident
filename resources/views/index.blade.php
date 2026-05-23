@@ -77,6 +77,24 @@
     <link rel="preload" href="{{ asset('style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 
+    @php
+        $feedData = \Illuminate\Support\Facades\Cache::get('homepage_sections', []);
+        $firstSlideId = $feedData['slide'][0] ?? null;
+        $firstSlideImage = null;
+        
+        if ($firstSlideId) {
+            $firstSlidePost = \App\Models\Post::find($firstSlideId);
+            if ($firstSlidePost && $firstSlidePost->thumbnail_url) {
+                $firstSlideImage = asset(\Illuminate\Support\Facades\Storage::url($firstSlidePost->thumbnail_url));
+            }
+        }
+    @endphp
+
+    @if($firstSlideImage)
+        <link rel="preload" as="image" href="{{ $firstSlideImage }}" fetchpriority="high">
+    @endif
+
+
     <style>
         .evident-confetti-wrapper {
             position: fixed;
@@ -209,9 +227,137 @@
         <div class='layouts-inner'>
             <div class='layout-1 layout section' id='layout-1' name='Layout 1'>
                 <div class='widget HTML' data-version='2' id='HTML2'>
-                    <div class='widget-content' data-fetch='slider-2[slide]6'>
-                        <span class='loader'><i></i><i></i><i></i><i></i></span>
+                    <div class='widget-content'>
+                        <div class="posts slide" id="main-slider">
+                            @php
+                                $feed = Cache::get('homepage_sections', []);
+                                $slideIds = $feed['slide'] ?? [];
+                                $slides = \App\Models\Post::with(['author', 'category'])
+                                    ->whereIn('id', $slideIds)
+                                    ->get()
+                                    ->sortBy(function ($post) use ($slideIds) {
+                                        return array_search($post->id, $slideIds);
+                                    })
+                                    ->values();
+                            @endphp
+                            @foreach ($slides as $post)
+                            <div class="post item-{{ $loop->index }}">
+                                <div class="postImage">
+                                    <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
+                                        @if($loop->first)
+                                            <span class="hasImage" style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
+                                        @else
+                                            <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
+                                        @endif
+                                    </a>
+                                    <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
+                                </div>
+                                <div class="postDetails">
+                                    <span class="postCat" data-cat="{{ $post->category->term ?? '' }}">
+                                        <a href="{{ route('category.show', ['category' => $post->category->term ?? 'uncategorized']) }}">{{ $post->category->term ?? '' }}</a>
+                                    </span>
+                                    <h3 class="postTitle">
+                                        <a href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}" title="{{ $post->title }}">
+                                            {{ $post->title }}
+                                        </a>
+                                    </h3>
+                                    <div class="postMeta">
+                                        <div class="postAuthorAndTimestamp">
+                                            <span class="authorImage">
+                                                @if($post->author)
+                                                <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->author->image_url)) }}"></span>
+                                                @endif
+                                            </span>
+                                            <span class="postAuthorAndDate">
+                                                <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
+                                                <span class="postDate">
+                                                    <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="navFor">
+                            <div class="posts slide" id="nav-slider">
+                                @foreach ($slides as $post)
+                                <div class="post item-{{ $loop->index }}">
+                                    <div class="postImage">
+                                        <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
+                                            <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
+                                        </a>
+                                        <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
+                                    </div>
+                                    <div class="postDetails">
+                                        <span class="postCat" data-cat="{{ $post->category->term ?? '' }}">
+                                            <a href="{{ route('category.show', ['category' => $post->category->term ?? 'uncategorized']) }}">{{ $post->category->term ?? '' }}</a>
+                                        </span>
+                                        <h3 class="postTitle">
+                                            <a href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}" title="{{ $post->title }}">
+                                                {{ $post->title }}
+                                            </a>
+                                        </h3>
+                                        <div class="postMeta">
+                                            <div class="postAuthorAndTimestamp">
+                                                <span class="authorImage">
+                                                    @if($post->author)
+                                                    <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->author->image_url)) }}"></span>
+                                                    @endif
+                                                </span>
+                                                <span class="postAuthorAndDate">
+                                                    <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
+                                                    <span class="postDate">
+                                                        <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            if ($.fn.slick) {
+                                $('#main-slider').slick({
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1,
+                                    arrows: true,
+                                    fade: true,
+                                    asNavFor: '#nav-slider',
+                                    autoplay: true,
+                                    autoplaySpeed: 5000,
+                                    prevArrow: '<button type="button" class="slick-prev slick-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="10" height="10"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg></button>',
+                                    nextArrow: '<button type="button" class="slick-next slick-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="10" height="10"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg></button>'
+                                });
+                                $('#nav-slider').slick({
+                                    slidesToShow: 4,
+                                    slidesToScroll: 1,
+                                    asNavFor: '#main-slider',
+                                    dots: false,
+                                    centerMode: false,
+                                    focusOnSelect: true,
+                                    vertical: true,
+                                    verticalSwiping: true,
+                                    arrows: false,
+                                    responsive: [
+                                        {
+                                            breakpoint: 768,
+                                            settings: {
+                                                vertical: false,
+                                                verticalSwiping: false,
+                                                slidesToShow: 3
+                                            }
+                                        }
+                                    ]
+                                });
+                            }
+                        });
+                    </script>
                 </div>
                 <div class='widget HTML' data-version='2' id='HTML1'>
                     <div class='widget-heading'>
