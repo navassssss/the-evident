@@ -230,7 +230,7 @@
     <div class='layouts wrapper'>
         <div class='layouts-inner'>
             <div class='layout-1 layout section' id='layout-1' name='Layout 1'>
-                <div class='widget HTML' data-version='2' id='HTML2'>
+                <div class='widget HTML slideView slider-2' data-version='2' id='HTML2'>
                     <div class='widget-content'>
                         <div class="posts slide" id="main-slider">
                             @php
