@@ -252,11 +252,7 @@
                             <div class="post item-{{ $loop->index }}">
                                 <div class="postImage">
                                     <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
-                                        @if($loop->first)
-                                            <span style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
-                                        @else
-                                            <span class="lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
-                                        @endif
+                                        <span class="lazy" style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
                                     </a>
                                     <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
                                 </div>
@@ -285,7 +281,7 @@
                                 <div class="post item-{{ $loop->index }}">
                                     <div class="postImage">
                                         <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
-                                            <span class="lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
+                                            <span class="lazy" style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
                                         </a>
                                         <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
                                     </div>
