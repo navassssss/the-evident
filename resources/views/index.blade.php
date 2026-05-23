@@ -253,9 +253,9 @@
                                 <div class="postImage">
                                     <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
                                         @if($loop->first)
-                                            <span class="hasImage" style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
+                                            <span style="background-image: url('{{ asset(Storage::url($post->thumbnail_url)) }}');"></span>
                                         @else
-                                            <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
+                                            <span class="lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
                                         @endif
                                     </a>
                                     <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
@@ -270,19 +270,10 @@
                                         </a>
                                     </h3>
                                     <div class="postMeta">
-                                        <div class="postAuthorAndTimestamp">
-                                            <span class="authorImage">
-                                                @if($post->author)
-                                                <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->author->image_url)) }}"></span>
-                                                @endif
-                                            </span>
-                                            <span class="postAuthorAndDate">
-                                                <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
-                                                <span class="postDate">
-                                                    <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
-                                                </span>
-                                            </span>
-                                        </div>
+                                        <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
+                                        <span class="postDate">
+                                            <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -294,7 +285,7 @@
                                 <div class="post item-{{ $loop->index }}">
                                     <div class="postImage">
                                         <a title="{{ $post->title }}" href="{{ route('home.show', ['category' => $post->category->scheme ?? 'uncategorized', 'post' => $post->slug ?? $post->id]) }}">
-                                            <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
+                                            <span class="lazy" data-style="{{ asset(Storage::url($post->thumbnail_url)) }}"></span>
                                         </a>
                                         <svg class="progressBar" width="72" height="72"><circle r="35" cx="36" cy="36"></circle></svg>
                                     </div>
@@ -308,19 +299,10 @@
                                             </a>
                                         </h3>
                                         <div class="postMeta">
-                                            <div class="postAuthorAndTimestamp">
-                                                <span class="authorImage">
-                                                    @if($post->author)
-                                                    <span class="hasImage lazy" data-style="{{ asset(Storage::url($post->author->image_url)) }}"></span>
-                                                    @endif
-                                                </span>
-                                                <span class="postAuthorAndDate">
-                                                    <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
-                                                    <span class="postDate">
-                                                        <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
-                                                    </span>
-                                                </span>
-                                            </div>
+                                            <span class="postAuthor">{{ $post->author->name ?? '' }}</span>
+                                            <span class="postDate">
+                                                <time class="published" datetime="{{ $post->published_at?->toIso8601String() ?? now()->toIso8601String() }}">{{ $post->published_at?->diffForHumans() }}</time>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
